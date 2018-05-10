@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="wx_invoke_msg" type="id" />
+    <item name="wx_parent_has_invoke_msg" type="id"/>
+</resources>

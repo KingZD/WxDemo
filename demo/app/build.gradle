@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.zed.xposed.demo"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    greendao {
+        //数据库的schema版本，也可以理解为数据库版本号 如果entity字段有增加更改字段 则会更新数据库
+        schemaVersion 1
+        //设置DaoMaster、DaoSession、Dao包名，也就是要放置这些类的包的全路径。
+        daoPackage 'com.zed.xposed.demo.greedao.dao'
+        //设置DaoMaster、DaoSession、Dao目录
+        targetGenDir 'src/main/java'
+    }
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    provided 'de.robv.android.xposed:api:82'
+    provided 'de.robv.android.xposed:api:82:sources'
+    implementation 'com.alibaba:fastjson:1.2.47'
+//    implementation  'org.greenrobot:greendao-generator:3.2.0'
+    implementation  'org.greenrobot:greendao:3.2.2'
+}
