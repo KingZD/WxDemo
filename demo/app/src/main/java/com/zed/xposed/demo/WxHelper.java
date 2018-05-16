@@ -3,11 +3,14 @@ package com.zed.xposed.demo;
 import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -71,10 +74,12 @@ public class WxHelper implements IXposedHookLoadPackage {
 //                    replaceData(applicationContext, lpparam.classLoader);
 //                    hookWxItemLongClick(applicationContext, lpparam.classLoader);
                     hookWxChatUIMM(applicationContext, lpparam.classLoader);
+                    hookWxMoments(applicationContext, lpparam.classLoader);
 //                    hookWxChatUIWith(applicationContext, lpparam.classLoader);
 //                    hookWxChatUI(applicationContext, lpparam.classLoader);
 //                    hookWxChatData(applicationContext, lpparam.classLoader);
                     hookDB(applicationContext, lpparam.classLoader);
+//                    hookVersion(applicationContext, lpparam.classLoader);
 //                    test(applicationContext, lpparam.classLoader);
                 }
             });
@@ -271,6 +276,78 @@ public class WxHelper implements IXposedHookLoadPackage {
                         super.beforeHookedMethod(param);
 
                         Log.e("Demo: hookWxItemLongClick->", param.args[1].toString() + "-" + param.args[5].toString() + "-" + param.args[6].toString());
+                    }
+                });
+    }
+
+
+    /**
+     * hook 朋友圈
+     *
+     * @param applicationContext
+     * @param classLoader
+     */
+    private void hookWxMoments(final Context applicationContext, final ClassLoader classLoader) {
+//        Class<?> adListView = XposedHelpers.findClass("com.tencent.mm.plugin.sns.ui.AdListView", classLoader);
+//
+//        XposedBridge.hookAllConstructors(adListView, new XC_MethodHook() {
+//            @Override
+//            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                super.beforeHookedMethod(param);
+//            }
+//        });
+
+//        XposedHelpers.findAndHookMethod("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI",
+////                classLoader,
+////                "onCreate",
+////                Bundle.class,
+////                new XC_MethodHook() {
+////                    @Override
+////                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+////                        super.afterHookedMethod(param);
+////                        Class<?> bb = XposedHelpers.findClass("com.tencent.mm.plugin.sns.ui.bb", classLoader);
+////                        Field odm = XposedHelpers.findFieldIfExists(bb, "odm");
+////                        LogUtils.i(odm.toString());
+////                    }
+////                });
+        XposedHelpers.findAndHookMethod("com.tencent.mm.plugin.sns.ui.bb",
+                classLoader,
+                "onCreate",
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                        Field odm = XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "odm");
+                        ListView mlv = (ListView) odm.get(param.thisObject);
+                        Class<?> mlvSuperClass = mlv.getClass().getSuperclass();
+                        LogUtils.i(mlv.toString(), mlvSuperClass.toString());
+                        XposedHelpers.findAndHookMethod(mlvSuperClass,
+                                "setAdapter",
+                                ListAdapter.class,
+                                new XC_MethodHook() {
+                                    @Override
+                                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                        super.beforeHookedMethod(param);
+                                        final ListAdapter adapter = (ListAdapter) param.args[0];
+                                        LogUtils.i(adapter.toString());
+                                        XposedHelpers.findAndHookMethod(adapter.getClass(),
+                                                "getView",
+                                                int.class,
+                                                View.class,
+                                                ViewGroup.class,
+                                                new XC_MethodHook() {
+                                                    @Override
+                                                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                                        super.beforeHookedMethod(param);
+                                                        int position = (int) param.args[0];
+                                                        View view = (View) param.args[1];
+                                                        ViewGroup viewGroup = (ViewGroup) param.args[2];
+                                                        LogUtils.i(position, view, viewGroup, JSON.toJSONString(adapter.getItem(position)));
+
+                                                    }
+                                                });
+                                    }
+                                });
                     }
                 });
     }
@@ -653,6 +730,48 @@ public class WxHelper implements IXposedHookLoadPackage {
                     }
                 });
 
+    }
+
+    /**
+     * hook版本号
+     *
+     * @param applicationContext
+     * @param classLoader
+     */
+    private void hookVersion(final Context applicationContext, final ClassLoader classLoader) {
+        try {
+            LogUtils.i("hookVersion");
+//            PackageManager pm = applicationContext.getPackageManager();
+//            PackageInfo pi = pm.getPackageInfo(applicationContext.getPackageName(), 0);
+//            pi.versionName = "ssssssss";
+//            Field versionName = XposedHelpers.findField(pi.getClass(), "versionName");
+//            versionName.setAccessible(true);
+//            versionName.set(versionName,"sddsddsdsd");
+//            LogUtils.i(JSONObject.toJSONString(pi));
+            Class<?> l = XposedHelpers.findClass("com.tencent.mm.ac.l", classLoader);
+            XposedHelpers.findAndHookConstructor("com.tencent.mm.plugin.setting.ui.setting.SettingsAboutMicroMsgUI",
+                    classLoader,
+                    int.class,
+                    int.class,
+                    String.class,
+                    l,
+                    new XC_MethodReplacement() {
+                        @Override
+                        protected Object replaceHookedMethod(MethodHookParam param) {
+                            Object arg = param.args[0];
+                            Log.e("Demo: hookListView->", "ak -> " + arg.toString());
+                            return param;
+                        }
+
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            super.afterHookedMethod(param);
+                            Log.e("Demo: hookListView->", "ak after -> " + param.getResult());
+                        }
+                    });
+        } catch (Exception e) {
+            LogUtils.e(e.getLocalizedMessage());
+        }
     }
 
     private void replaceData(final Context applicationContext, final ClassLoader classLoader) {
