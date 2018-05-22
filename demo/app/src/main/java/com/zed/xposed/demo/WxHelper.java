@@ -1,8 +1,11 @@
 package com.zed.xposed.demo;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -21,6 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewStub;
 import android.widget.AbsListView;
 import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
@@ -287,29 +291,7 @@ public class WxHelper implements IXposedHookLoadPackage {
      * @param applicationContext
      * @param classLoader
      */
-    private void hookWxMoments(final Context applicationContext, final ClassLoader classLoader) {
-//        Class<?> adListView = XposedHelpers.findClass("com.tencent.mm.plugin.sns.ui.AdListView", classLoader);
-//
-//        XposedBridge.hookAllConstructors(adListView, new XC_MethodHook() {
-//            @Override
-//            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-//                super.beforeHookedMethod(param);
-//            }
-//        });
-
-//        XposedHelpers.findAndHookMethod("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI",
-////                classLoader,
-////                "onCreate",
-////                Bundle.class,
-////                new XC_MethodHook() {
-////                    @Override
-////                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-////                        super.afterHookedMethod(param);
-////                        Class<?> bb = XposedHelpers.findClass("com.tencent.mm.plugin.sns.ui.bb", classLoader);
-////                        Field odm = XposedHelpers.findFieldIfExists(bb, "odm");
-////                        LogUtils.i(odm.toString());
-////                    }
-////                });
+    private void hookWxMoments(final Context applicationContext, final ClassLoader classLoader) throws Error {
         XposedHelpers.findAndHookMethod("com.tencent.mm.plugin.sns.ui.bb",
                 classLoader,
                 "onCreate",
@@ -317,10 +299,12 @@ public class WxHelper implements IXposedHookLoadPackage {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         super.afterHookedMethod(param);
+                        Field mat = XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "mActivity");
+                        final Activity mActivity = (Activity) mat.get(param.thisObject);
                         Field odm = XposedHelpers.findFieldIfExists(param.thisObject.getClass(), "odm");
                         ListView mlv = (ListView) odm.get(param.thisObject);
                         Class<?> mlvSuperClass = mlv.getClass().getSuperclass();
-                        LogUtils.i(mlv.toString(), mlvSuperClass.toString());
+//                        LogUtils.i(mlv.toString(), mlvSuperClass.toString());
                         XposedHelpers.findAndHookMethod(mlvSuperClass,
                                 "setAdapter",
                                 ListAdapter.class,
@@ -329,7 +313,7 @@ public class WxHelper implements IXposedHookLoadPackage {
                                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                         super.beforeHookedMethod(param);
                                         final ListAdapter adapter = (ListAdapter) param.args[0];
-                                        LogUtils.i(adapter.toString());
+//                                        LogUtils.i(adapter.toString());
                                         XposedHelpers.findAndHookMethod(adapter.getClass(),
                                                 "getView",
                                                 int.class,
@@ -339,11 +323,75 @@ public class WxHelper implements IXposedHookLoadPackage {
                                                     @Override
                                                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                                         super.beforeHookedMethod(param);
-                                                        int position = (int) param.args[0];
-                                                        View view = (View) param.args[1];
-                                                        ViewGroup viewGroup = (ViewGroup) param.args[2];
-                                                        LogUtils.i(position, view, viewGroup, JSON.toJSONString(adapter.getItem(position)));
+//                                                        int position = (int) param.args[0];
+                                                        final View view = (View) param.args[1];
+//                                                        ViewGroup viewGroup = (ViewGroup) param.args[2];
+                                                        if (view != null) {
+                                                            //fl 第一个view是图片 第二个view是朋友圈内容
+                                                            final ViewGroup fl = (ViewGroup) view;
+//                                                            StringBuffer sb = new StringBuffer();
 
+//                                                            for (int i = 0; i < fl.getChildCount(); i++) {
+//                                                                sb.append(fl.getChildAt(i).toString());
+//                                                                sb.append("@");
+//                                                                sb.append(fl.getChildAt(i).getId());
+//                                                                sb.append("@");
+//                                                                sb.append(applicationContext.getResources().getResourceName(fl.getChildAt(i).getId()));
+//                                                                sb.append("\n");
+//                                                            }
+
+//                                                            LogUtils.i(position, view, sb.toString(), viewGroup, JSON.toJSONString(adapter.getItem(position)), adapter.getItem(position).toString());
+
+                                                            view.setOnLongClickListener(new View.OnLongClickListener() {
+
+                                                                @Override
+                                                                public boolean onLongClick(View v) {
+                                                                    new AlertDialog.Builder(mActivity)
+                                                                            .setTitle("温馨提示")
+                                                                            .setMessage("是否对当前消息进行疯狂点赞").setNegativeButton("是的", new DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            mActivity.runOnUiThread(new Runnable() {
+                                                                                @Override
+                                                                                public void run() {
+                                                                                    if (fl != null && fl.getChildCount() > 1) {
+                                                                                        LinearLayout msgLinear = (LinearLayout) fl.getChildAt(1);
+                                                                                        for (int i = 0; i < msgLinear.getChildCount(); i++) {
+                                                                                            View mc = msgLinear.getChildAt(i);
+                                                                                            String resourceName = applicationContext.getResources().getResourceName(mc.getId());
+                                                                                            if (mc instanceof TextView) {
+//                                                                                                mc.setVisibility(View.VISIBLE);
+//                                                                                                ((TextView) mc).append("看雪论坛，看雪论坛++，看雪论坛+++");
+                                                                                                //因为有些gettext 得到的是spanned 调toString会引起shutdown 所以用以下方式打印即可
+//                                                                                                LogUtils.i(((TextView) mc).getText());
+                                                                                            } else if (mc instanceof ViewStub) {
+//                                                                                                ((ViewStub) mc).inflate();
+                                                                                            } else if("com.tencent.mm:id/de_".equals(resourceName)){
+                                                                                                ViewGroup vg = (ViewGroup)mc;
+                                                                                                mc.setVisibility(View.VISIBLE);
+                                                                                                if(vg.getChildCount()>0){
+                                                                                                    TextView likeView = (TextView) vg.getChildAt(0);
+                                                                                                    likeView.append("看雪论坛，看雪论坛++，看雪论坛+++");
+                                                                                                    LogUtils.i(likeView.getCompoundDrawables());
+                                                                                                }else {
+                                                                                                    TextView tv = new TextView(applicationContext);
+                                                                                                    tv.setText(",看雪论坛,看雪论坛++,看雪论坛+++");
+                                                                                                    tv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                                                                                    vg.addView(tv);
+                                                                                                }
+                                                                                            }
+//                                                                                            LogUtils.i(mc, resourceName, "com.tencent.mm:id/de_");
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            });
+
+                                                                        }
+                                                                    }).setNeutralButton("不是的", null).show();
+                                                                    return false;
+                                                                }
+                                                            });
+                                                        }
                                                     }
                                                 });
                                     }
@@ -705,7 +753,7 @@ public class WxHelper implements IXposedHookLoadPackage {
                     protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                         Object[] objArr = (Object[]) param.args[2];
                         String originalSql = param.args[1].toString();
-                        //打印所有调用SQLiteProgram的sql
+                        //打印所有调用SQLiteProgram的sql 猜测TABLE=AdSnsInfo 为朋友圈消息
 //                        LogUtils.e("hookDB", "sql -> " + param.args[1], "objArr:" + JSON.toJSONString(objArr));
                         if (objArr != null && originalSql.toUpperCase().startsWith("UPDATE MESSAGE")) {
                             for (Object obj : objArr) {
@@ -757,10 +805,10 @@ public class WxHelper implements IXposedHookLoadPackage {
                     l,
                     new XC_MethodReplacement() {
                         @Override
-                        protected Object replaceHookedMethod(MethodHookParam param) {
+                        protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
                             Object arg = param.args[0];
                             Log.e("Demo: hookListView->", "ak -> " + arg.toString());
-                            return param;
+                            return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                         }
 
                         @Override
