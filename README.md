@@ -1,4 +1,8 @@
 # WxDemo
+
+将代码按照功能模块拆分，便于后期扩展，之前的老代码放在[WxHelperOld.java](https://github.com/KingZD/WxDemo/blob/master/demo/app/src/main/java/com/zed/xposed/demo/WxHelperOld.java)
+
+
 作为学习练手 基于微信6.6.6版本
 
 [Xposed第四课(微信篇) 朋友圈点赞 (1)](https://www.jianshu.com/p/88f70b8597fc)  
