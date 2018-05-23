@@ -1,6 +1,7 @@
 # WxDemo
 
-将代码按照功能模块拆分，便于后期扩展，之前的老代码放在[WxHelperOld.java](https://github.com/KingZD/WxDemo/blob/master/demo/app/src/main/java/com/zed/xposed/demo/WxHelperOld.java)
+将代码按照功能模块拆分，便于后期扩展，目前新结构主要包含防撤回和朋友圈  
+老代码放在[WxHelperOld.java](https://github.com/KingZD/WxDemo/blob/master/demo/app/src/main/java/com/zed/xposed/demo/WxHelperOld.java)
 
 
 作为学习练手 基于微信6.6.6版本
