@@ -116,7 +116,7 @@ public class MomentImpl extends IMoment {
                                                                                                 if (vg.getChildCount() > 0) {
                                                                                                     TextView likeView = (TextView) vg.getChildAt(0);
                                                                                                     likeView.append("看雪论坛，看雪论坛++，看雪论坛+++");
-                                                                                                    LogUtils.i(likeView.getCompoundDrawables());
+                                                                                                    LogUtils.i((Object) likeView.getCompoundDrawables());
                                                                                                 } else {
                                                                                                     TextView tv = new TextView(mContext);
                                                                                                     tv.setText(",看雪论坛,看雪论坛++,看雪论坛+++");

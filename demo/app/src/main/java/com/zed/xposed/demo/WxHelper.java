@@ -1,6 +1,7 @@
 package com.zed.xposed.demo;
 
 import com.zed.xposed.demo.action.inter.IChat;
+import com.zed.xposed.demo.action.inter.IContact;
 import com.zed.xposed.demo.action.inter.IDB;
 import com.zed.xposed.demo.action.inter.IMoment;
 
@@ -27,5 +28,10 @@ public class WxHelper extends Wx {
     @Override
     void initDB(IDB idb) {
         idb.hookDB();
+    }
+
+    @Override
+    void initContact(IContact iContact) {
+        iContact.hookContact();
     }
 }

@@ -4,8 +4,10 @@ import android.app.Application;
 import android.content.Context;
 
 import com.zed.xposed.demo.action.inter.IChat;
+import com.zed.xposed.demo.action.inter.IContact;
 import com.zed.xposed.demo.action.inter.impl.ChatImpl;
 import com.zed.xposed.demo.action.inter.IDB;
+import com.zed.xposed.demo.action.inter.impl.ContactImpl;
 import com.zed.xposed.demo.action.inter.impl.DBImpl;
 import com.zed.xposed.demo.action.inter.IMoment;
 import com.zed.xposed.demo.action.inter.impl.MomentImpl;
@@ -32,10 +34,11 @@ public abstract class Wx implements IXposedHookLoadPackage {
                     super.afterHookedMethod(param);
                     Context context = (Context) param.args[0];
                     LogUtils.init(context);
-                    LogUtils.iTag("初始化操作完成",param.thisObject);
+                    LogUtils.i("初始化操作完成",param.thisObject);
                     initDB(new DBImpl(context, lpparam.classLoader));
                     initChat(new ChatImpl(context, lpparam.classLoader));
                     initMoment(new MomentImpl(context, lpparam.classLoader));
+                    initContact(new ContactImpl(context,lpparam.classLoader));
                 }
             });
         }
@@ -46,4 +49,6 @@ public abstract class Wx implements IXposedHookLoadPackage {
     abstract void initMoment(IMoment iMoment);
     //初始化数据库模块
     abstract void initDB(IDB idb);
+
+    abstract void initContact(IContact iContact);
 }

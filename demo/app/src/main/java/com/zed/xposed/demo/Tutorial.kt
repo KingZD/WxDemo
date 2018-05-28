@@ -4,6 +4,7 @@ package com.zed.xposed.demo
  * Created by zed on 2018/4/11.
  */
 import com.zed.xposed.demo.action.inter.IChat
+import com.zed.xposed.demo.action.inter.IContact
 import com.zed.xposed.demo.action.inter.IDB
 import com.zed.xposed.demo.action.inter.IMoment
 
@@ -15,6 +16,8 @@ import com.zed.xposed.demo.action.inter.IMoment
  */
 
 open class Tutorial : Wx() {
+    override fun initContact(iContact: IContact?) {
+    }
 
     override fun initChat(iChat: IChat?) {
 //        iChat?.hookWxChatUIMM()
