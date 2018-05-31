@@ -3,6 +3,7 @@ package com.zed.xposed.demo.greedao.entity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
 
 /**
  * Created by zed on 2018/5/8.
@@ -10,10 +11,13 @@ import org.greenrobot.greendao.annotation.Id;
  */
 @Entity
 public class WxChatInvokeMsg {
+
     @Id
     private String msgId;
     private String msgSeq;
     private String createTime;
+
+
     @Generated(hash = 712944388)
     public WxChatInvokeMsg(String msgId, String msgSeq, String createTime) {
         this.msgId = msgId;
@@ -23,6 +27,8 @@ public class WxChatInvokeMsg {
     @Generated(hash = 449343089)
     public WxChatInvokeMsg() {
     }
+
+
     public String getMsgId() {
         return this.msgId;
     }

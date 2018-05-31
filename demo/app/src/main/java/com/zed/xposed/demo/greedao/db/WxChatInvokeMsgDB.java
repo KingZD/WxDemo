@@ -59,15 +59,6 @@ public class WxChatInvokeMsgDB {
         DbManager.getDaoSession(context).getWxChatInvokeMsgDao().delete(WxChatInvokeMsg);
     }
 
-    /**
-     * 根据id删除数据至数据库  
-     *
-     * @param context
-     * @param id      删除具体内容  
-     */
-    public static void deleteByKeyData(Context context, String id) {
-        DbManager.getDaoSession(context).getWxChatInvokeMsgDao().deleteByKey(id);
-    }
 
     /**
      * 删除全部数据  

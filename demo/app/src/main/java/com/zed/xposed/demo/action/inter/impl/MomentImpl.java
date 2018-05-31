@@ -12,10 +12,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
 import com.zed.xposed.demo.action.inter.IMoment;
+import com.zed.xposed.demo.greedao.db.WxContactDB;
+import com.zed.xposed.demo.greedao.entity.WxContact;
 import com.zed.xposed.demo.log.LogUtils;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -90,6 +94,8 @@ public class MomentImpl extends IMoment {
 
                                                                 @Override
                                                                 public boolean onLongClick(View v) {
+                                                                    List<WxContact> wxContacts = WxContactDB.queryAll(mContext);
+                                                                    LogUtils.i(JSON.toJSONString(wxContacts));
                                                                     new AlertDialog.Builder(mActivity)
                                                                             .setTitle("温馨提示")
                                                                             .setMessage("是否对当前消息进行疯狂点赞").setNegativeButton("是的", new DialogInterface.OnClickListener() {

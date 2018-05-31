@@ -17,4 +17,7 @@ public abstract class IDB implements IBase {
     }
     //数据库
     public abstract void hookDB();
+//    public abstract void hookWxQueryWithFactory();
+//    public abstract void hookWxRawQueryWithFactory();
+//    public abstract void hookSQLiteDatabase();
 }
