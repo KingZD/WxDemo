@@ -13,7 +13,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val show = WxMomentContactDialog.instance(this).build().show();
-        show.getWindow().setLayout(ViewUtil.dp2px(this, 300f), ViewUtil.dp2px(this, 400f));
     }
 }

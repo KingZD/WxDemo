@@ -4,6 +4,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by zed on 2018/5/30.
@@ -26,15 +27,17 @@ public class WxContact {
     private String field_descWordingQuanpin;
     private String field_remarkDesc;
     private String field_signature;
+    //@Transient：表明这个字段不会被写入数据库，只是作为一个普通的java类字段，用来临时存储数据的，不会被持久化
+    @Transient
     private boolean check;
 
-    @Generated(hash = 484561840)
+    @Generated(hash = 678797076)
     public WxContact(String field_username, String field_nickname, String field_alias,
             String field_conRemark, int field_verifyFlag, int field_showHead,
             int field_weiboFlag, long fNU, int field_deleteFlag, byte[] field_lvbuff,
             String field_descWordingId, String field_openImAppid, String field_descWording,
-            String field_descWordingQuanpin, String field_remarkDesc, String field_signature,
-            boolean check) {
+            String field_descWordingQuanpin, String field_remarkDesc,
+            String field_signature) {
         this.field_username = field_username;
         this.field_nickname = field_nickname;
         this.field_alias = field_alias;
@@ -51,7 +54,6 @@ public class WxContact {
         this.field_descWordingQuanpin = field_descWordingQuanpin;
         this.field_remarkDesc = field_remarkDesc;
         this.field_signature = field_signature;
-        this.check = check;
     }
 
     @Generated(hash = 1597177920)
