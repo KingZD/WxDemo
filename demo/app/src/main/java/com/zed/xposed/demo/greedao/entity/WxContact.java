@@ -26,15 +26,15 @@ public class WxContact {
     private String field_descWordingQuanpin;
     private String field_remarkDesc;
     private String field_signature;
+    private boolean check;
 
-    @Generated(hash = 678797076)
-    public WxContact(String field_username, String field_nickname,
-                     String field_alias, String field_conRemark, int field_verifyFlag,
-                     int field_showHead, int field_weiboFlag, long fNU, int field_deleteFlag,
-                     byte[] field_lvbuff, String field_descWordingId,
-                     String field_openImAppid, String field_descWording,
-                     String field_descWordingQuanpin, String field_remarkDesc,
-                     String field_signature) {
+    @Generated(hash = 484561840)
+    public WxContact(String field_username, String field_nickname, String field_alias,
+            String field_conRemark, int field_verifyFlag, int field_showHead,
+            int field_weiboFlag, long fNU, int field_deleteFlag, byte[] field_lvbuff,
+            String field_descWordingId, String field_openImAppid, String field_descWording,
+            String field_descWordingQuanpin, String field_remarkDesc, String field_signature,
+            boolean check) {
         this.field_username = field_username;
         this.field_nickname = field_nickname;
         this.field_alias = field_alias;
@@ -51,6 +51,7 @@ public class WxContact {
         this.field_descWordingQuanpin = field_descWordingQuanpin;
         this.field_remarkDesc = field_remarkDesc;
         this.field_signature = field_signature;
+        this.check = check;
     }
 
     @Generated(hash = 1597177920)
@@ -191,5 +192,17 @@ public class WxContact {
 
     public void setFNU(long fNU) {
         this.fNU = fNU;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+
+    public boolean getCheck() {
+        return this.check;
     }
 }

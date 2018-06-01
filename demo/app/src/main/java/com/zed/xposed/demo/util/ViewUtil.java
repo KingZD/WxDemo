@@ -1,5 +1,6 @@
 package com.zed.xposed.demo.util;
 
+import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
@@ -35,5 +36,28 @@ public class ViewUtil {
             result.addAll(viewArrayList);
         }
         return result;
+    }
+
+    /**
+     * dp转换成px
+     */
+    public static int dp2px(Context context, float dpValue){
+        float scale=context.getResources().getDisplayMetrics().density;
+        return (int)(dpValue*scale+0.5f);
+    }
+
+    /**
+     * px转换成dp
+     */
+    public static int px2dp(Context context,float pxValue){
+        float scale=context.getResources().getDisplayMetrics().density;
+        return (int)(pxValue/scale+0.5f);
+    }
+    /**
+     * sp转换成px
+     */
+    public static int sp2px(Context context,float spValue){
+        float fontScale=context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue*fontScale+0.5f);
     }
 }
