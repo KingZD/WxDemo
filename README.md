@@ -7,6 +7,7 @@
 
 作为学习练手 基于微信6.6.6版本
 
+[Xposed第五课(微信篇) 聊天机器人](https://www.jianshu.com/p/2ed5c3fc7a51)  
 [Xposed第四课(微信篇) 朋友圈点赞(2)之好友列表](https://www.jianshu.com/p/9330efe26dcc)  
 [Xposed第四课(微信篇) 朋友圈点赞 (1)](https://www.jianshu.com/p/88f70b8597fc)  
 [Xposed第三课(微信篇) 防止好友消息撤回](https://www.jianshu.com/p/bcaf069ec9e5)  
