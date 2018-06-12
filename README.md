@@ -3,7 +3,7 @@
 将代码按照功能模块拆分，便于后期扩展，目前新结构主要包含防撤回和朋友圈  
 老代码放在[WxHelperOld.java](https://github.com/KingZD/WxDemo/blob/master/demo/app/src/main/java/com/zed/xposed/demo/WxHelperOld.java)
 
-这次我把我用到的微信版本和genymotion的arm-transfer放进去了 所以体积变大了 哈哈
+这次我把我用到的微信版本和反编译出来的代码以及genymotion的arm-transfer放进去了 所以体积变大了 哈哈
 
 作为学习练手 基于微信6.6.6版本
 
