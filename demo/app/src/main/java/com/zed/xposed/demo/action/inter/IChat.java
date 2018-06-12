@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.zed.xposed.demo.base.IBase;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Created by zed on 2018/5/23.
  */
@@ -18,4 +20,5 @@ public abstract class IChat implements IBase {
 
     //微信聊天界面防撤回
     public abstract void hookWxChatUIMM();
+    public abstract void autoRepeat();
 }

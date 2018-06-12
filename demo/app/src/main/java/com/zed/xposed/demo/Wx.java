@@ -34,19 +34,22 @@ public abstract class Wx implements IXposedHookLoadPackage {
                     super.afterHookedMethod(param);
                     Context context = (Context) param.args[0];
                     LogUtils.init(context);
-                    LogUtils.i("初始化操作完成",param.thisObject);
+                    LogUtils.i("初始化操作完成", param.thisObject);
                     initDB(new DBImpl(context, lpparam.classLoader));
                     initChat(new ChatImpl(context, lpparam.classLoader));
                     initMoment(new MomentImpl(context, lpparam.classLoader));
-                    initContact(new ContactImpl(context,lpparam.classLoader));
+                    initContact(new ContactImpl(context, lpparam.classLoader));
                 }
             });
         }
     }
+
     //初始化聊天模块
     abstract void initChat(IChat iChat);
+
     //初始化朋友圈模块
     abstract void initMoment(IMoment iMoment);
+
     //初始化数据库模块
     abstract void initDB(IDB idb);
 

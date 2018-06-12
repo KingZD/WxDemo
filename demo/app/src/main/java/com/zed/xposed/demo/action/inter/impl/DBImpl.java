@@ -73,6 +73,20 @@ public class DBImpl extends IDB {
                                     WxChatInvokeMsgDB.insertData(mContext, msg);
                                 }
                             }
+                        } else if (objArr != null && sql.toUpperCase().startsWith("INSERT INTO MESSAGE")) {
+
+                            LogUtils.e(param.args);
+//                            Class<?> aClass = XposedHelpers.findClass("com.tencent.mm.ui.chatting.o", mClassLoader);
+//                            Method fz = XposedHelpers.findMethodExact(aClass, "FZ", String.class);
+//                            fz.invoke(aClass.newInstance(),"haha");
+//                            XposedHelpers.findAndHookMethod(aClass, "FZ", String.class, new XC_MethodHook() {
+//                                @Override
+//                                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                                    super.beforeHookedMethod(param);
+//                                    LogUtils.i(param.args);
+//                                }
+//                            });
+
                         }
                         return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
                     }

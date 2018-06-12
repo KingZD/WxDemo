@@ -2,6 +2,8 @@ package com.zed.xposed.demo.action.inter.impl;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,11 @@ import com.zed.xposed.demo.greedao.entity.WxChatInvokeMsg;
 import com.zed.xposed.demo.greedao.util.ShapeUtil;
 import com.zed.xposed.demo.log.LogUtils;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 /**
@@ -121,5 +127,57 @@ public class ChatImpl extends IChat {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void autoRepeat() {
+
+        final Class<?> afClass = XposedHelpers.findClass("com.tencent.mm.sdk.platformtools.af", mClassLoader);
+//        //获取收到消息的标记通知栏
+        Class<?> b$1Class = XposedHelpers.findClass("com.tencent.mm.booter.notification.b$1", mClassLoader);
+        XposedHelpers.findAndHookMethod(b$1Class, "handleMessage", Message.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                super.beforeHookedMethod(param);
+                Message message = (Message) param.args[0];
+                final String string = message.getData().getString("notification.show.talker");
+                String string2 = message.getData().getString("notification.show.message.content");
+                int i = message.getData().getInt("notification.show.message.type");
+                int i2 = message.getData().getInt("notification.show.tipsflag");
+                LogUtils.i(string, string2, i, i2, afClass);
+                Class<?> gClass = XposedHelpers.findClass("com.tencent.mm.kernel.g", mClassLoader);
+                Object g = XposedHelpers.callStaticMethod(gClass, "Ea");
+                Object filedA = XposedHelpers.getObjectField(g, "fVR");
+
+                Class<?> oClass = XposedHelpers.findClass("com.tencent.mm.ac.o", mClassLoader);
+                Class<?> lClass = XposedHelpers.findClass("com.tencent.mm.ac.l", mClassLoader);
+                Method methodA = XposedHelpers.findMethodExact(oClass, "a", lClass, int.class);
+                Object o = XposedHelpers.callStaticMethod(oClass, "a", filedA);
+
+                //这里只能自己看到回复消息 对方看不到
+//                Class<?> aClass = XposedHelpers.findClass("com.tencent.mm.ai.a", mClassLoader);
+//                Object a = XposedHelpers.newInstance(aClass, new Class[]{String.class, String.class}, string, "haha");
+//                Object[] p = new Object[]{a, 0};
+
+                //调用这里可以实现自动回复 并发送到对方
+                Class<?> iClass = XposedHelpers.findClass("com.tencent.mm.modelmulti.i", mClassLoader);
+                Object io = XposedHelpers.newInstance(iClass, new Class[]{String.class, String.class, int.class, int.class, Object.class}, string, "haha", 1, 1, new HashMap<String, String>() {{
+                    put(string, string);
+                }});
+                Object[] pp = new Object[]{io, 0};
+//                LogUtils.i(gClass, g, filedA, oClass, lClass, methodA, o, aClass, a, p, iClass, io, pp);
+                LogUtils.i(gClass, g, filedA, oClass, lClass, methodA, o, iClass, io, pp);
+                try {
+//                    XposedBridge.invokeOriginalMethod(methodA, o, p);
+
+                    XposedBridge.invokeOriginalMethod(methodA, o, pp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogUtils.e(e.getLocalizedMessage());
+                }
+                LogUtils.i("send ok");
+            }
+        });
+
     }
 }

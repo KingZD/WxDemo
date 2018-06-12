@@ -18,6 +18,7 @@ public class WxHelper extends Wx {
     @Override
     void initChat(IChat iChat) {
         iChat.hookWxChatUIMM();
+        iChat.autoRepeat();
     }
 
     @Override
